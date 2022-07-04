@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 class Location {
 
   String _locationName = '';
-  static const String googleUrl = 'https://www.google.com/maps/search/@?api=1&map_action=map&query=exchange+office&zoom=20';
+  static const String googleUrl = 'https://www.google.com/maps/search/?api=1&map_action=map&query=exchange+office&zoom=20';
   static const String mapsAppUrl = 'geo:0.0';
 
   Future<String> getLocationName() async{
@@ -25,9 +25,9 @@ class Location {
 
   Future<void> openMap() async {
 
-
     if (await canLaunchUrl(Uri.parse(googleUrl))) {
-      await launchUrl(Uri.parse(googleUrl), mode: LaunchMode.platformDefault);
+      if(await launch(googleUrl)){}
+      else{await launchUrl(Uri.parse(googleUrl));}
     } else {
       throw 'Could not open the map.';
     }
