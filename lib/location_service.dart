@@ -26,8 +26,7 @@ class Location {
   Future<void> openMap() async {
 
     if (await canLaunchUrl(Uri.parse(googleUrl))) {
-      if(await launch(googleUrl)){}
-      else{await launchUrl(Uri.parse(googleUrl));}
+      await launch(googleUrl);
     } else {
       throw 'Could not open the map.';
     }

@@ -35,7 +35,7 @@ class _MapWidgetState extends State<MapWidget> {
       height: 200.0,
       padding: const EdgeInsets.all(8.0),
       child: Card(
-        shape: RoundedRectangleBorder(
+        shape:  RoundedRectangleBorder(
           side: const BorderSide(
             color: Colors.black,
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'exchangeMap.dart';
+import 'exchangeWidget.dart';
 
 void main() {
   runApp(const ExchangeApp());
@@ -25,9 +26,10 @@ class ExchangeApp extends StatelessWidget {
               margin: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment : CrossAxisAlignment.stretch,
-                children: const <Widget>[
-                  MapWidget(),
-
+                children:  <Widget>[
+                  const Flexible(flex: 3, fit: FlexFit.tight,child: exchangeWidget()),
+                  Flexible(flex: 2, fit: FlexFit.tight,child: Container()),
+                  const Flexible(flex: 2, fit: FlexFit.tight,child: MapWidget()),
                 ],
               ),
             ),
