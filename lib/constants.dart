@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 const double kCardElevation = 8.0;
 
@@ -10,9 +11,39 @@ const Text kFromText = Text(
   textAlign: TextAlign.center,
 );
 
-const Flexible kFromFlexible = Flexible(flex: 1,
+const Flexible kFromFlexible = Flexible(
+  flex: 1,
   fit: FlexFit.loose,
-  child: Padding(padding: EdgeInsets.all(4.0), child: kFromText),);
+  child: Padding(padding: EdgeInsets.all(4.0), child: kFromText),
+);
 
+const SizedBox kSizedBoxHorizontal = SizedBox(
+  width: 8.0,
+);
 
-const SizedBox kSizedBoxHorizontal = SizedBox(width: 8.0,);
+const Divider kColumnDivider = Divider(
+  color: Colors.black,
+  thickness: 4.0,
+  indent: 8.0,
+  endIndent: 8.0,
+);
+
+final Row swapRow =  Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: <Widget>[
+    const Expanded(
+        child: kColumnDivider
+    ),
+    ElevatedButton(
+      child: const Icon(Icons.swap_vert),
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        fixedSize: const Size(18, 18),
+        shape: const CircleBorder(),
+      ),
+    ),
+    const Expanded(
+        child: kColumnDivider,
+    ),
+  ],
+);
