@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 const double kCardElevation = 8.0;
 
+const int kDropDownElevation = 12;
+
 const Text kFromText = Text(
   'From',
   style: TextStyle(fontWeight: FontWeight.bold),
@@ -10,7 +12,7 @@ const Text kFromText = Text(
 
 const Flexible kFromFlexible = Flexible(flex: 1,
   fit: FlexFit.loose,
-  child: Padding(padding: EdgeInsets.all(8.0), child: kFromText),);
+  child: Padding(padding: EdgeInsets.all(4.0), child: kFromText),);
 
 
 const SizedBox kSizedBoxHorizontal = SizedBox(width: 8.0,);

@@ -42,41 +42,40 @@ class _exchangeWidgetState extends State<exchangeWidget> {
           borderRadius: BorderRadius.circular(12.0),
         ),
         elevation: kCardElevation,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
             kFromFlexible,
             Flexible(
               flex: 2,
               fit: FlexFit.loose,
-              child: Row(
-                children: <Widget>[
-                  kSizedBoxHorizontal,
-                  DropdownButton(
-                    iconSize: 24.0,
-                    items: currencySymbols
-                        .map((description, value) {
-                          return MapEntry(
-                              description,
-                              DropdownMenuItem(
-                                value: description,
-                                child: Text(description+' , '+value),
-                              ));
-                        })
-                        .values
-                        .toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        fromCurrency = newValue!;
-                        print(fromCurrency);
-                      });
-                    },
-                  ),
-                  kSizedBoxHorizontal,
-                ],
+              child: DropdownButton(
+                borderRadius: BorderRadius.circular(12.0),
+                elevation: kDropDownElevation,
+                iconSize: 24.0,
+                items: currencySymbols
+                    .map((description, value) {
+                  return MapEntry(
+                      description,
+                      DropdownMenuItem(
+                        value: description,
+                        child: Text(description + ' , ' + value),
+                      ));
+                })
+                    .values
+                    .toList(),
+                value: fromCurrency,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    fromCurrency = newValue!;
+                    print(fromCurrency);
+                  });
+                },
               ),
             ),
-          ],
+          ]),
         ),
       ),
     );
