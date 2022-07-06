@@ -4,7 +4,9 @@ import 'exchange_service.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 class exchangeWidget extends StatefulWidget {
-  const exchangeWidget({Key? key}) : super(key: key);
+  exchangeWidget({Key? key, this.defaultFromValue = '100.00'}) : super(key: key);
+
+  final String defaultFromValue;
 
   @override
   _exchangeWidgetState createState() => _exchangeWidgetState();
@@ -16,12 +18,17 @@ class _exchangeWidgetState extends State<exchangeWidget> {
 
   String fromCurrency = 'USD';
   String toCurrency = 'EUR';
-  var currencyController =
-      MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
+  late String fromValue;
+  String toValue = '';
+  late var currencyControllerFrom;
+  late TextEditingController _controllerTo;
+
 
   @override
   void initState() {
-    exchangeRates.convertFromTo(fromCurrency, toCurrency);
+    fromValue = widget.defaultFromValue;
+    currencyControllerFrom =  MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: '',  initialValue: double.parse(fromValue));
+    _controllerTo = TextEditingController(text: toValue);
     exchangeRates.getCurrencyList().then((mapCurrency) {
       setState(() {
         currencySymbols.addAll(mapCurrency);
@@ -29,6 +36,7 @@ class _exchangeWidgetState extends State<exchangeWidget> {
     });
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +77,12 @@ class _exchangeWidgetState extends State<exchangeWidget> {
                         .values
                         .toList(),
                     value: fromCurrency,
-                    onChanged: (String? newValue) {
+                    onChanged: (String? newValue) async{
+                      fromCurrency = newValue!;
+                      toValue =  await exchangeRates.convertFromTo(fromCurrency, toCurrency, fromValue);
+                      print(fromCurrency);
                       setState(() {
-                        fromCurrency = newValue!;
-                        print(fromCurrency);
+                        _controllerTo = TextEditingController(text: toValue);
                       });
                     },
                   ),
@@ -84,10 +94,60 @@ class _exchangeWidgetState extends State<exchangeWidget> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
-                    controller: currencyController,
+                    controller: currencyControllerFrom,
+                    onChanged: (String? value) async{
+                        fromValue = value!;
+                        toValue =  await exchangeRates.convertFromTo(fromCurrency, toCurrency, fromValue);
+                        print(toValue);
+                        setState(() {
+                          _controllerTo = TextEditingController(text: toValue);
+                        });
+                    },
                   ),
                 ),
                 swapRow,
+                kFromFlexible,
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.loose,
+                  child: DropdownButton(
+                    borderRadius: BorderRadius.circular(12.0),
+                    elevation: kDropDownElevation,
+                    iconSize: 24.0,
+                    items: currencySymbols
+                        .map((description, value) {
+                          return MapEntry(
+                              description,
+                              DropdownMenuItem(
+                                value: description,
+                                child: Text(description + ' , ' + value),
+                              ));
+                        })
+                        .values
+                        .toList(),
+                    value: toCurrency,
+                    onChanged: (String? newValue) async{
+                      toCurrency = newValue!;
+                      toValue =  await exchangeRates.convertFromTo(fromCurrency, toCurrency, fromValue);
+                      print(toCurrency);
+                      setState(() {
+                        _controllerTo = TextEditingController(text: toValue);
+                      });
+                    },
+                  ),
+                ),
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.tight,
+                  child: TextField(
+                    enabled: false,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    controller: _controllerTo,
+                  ),
+                ),
+                kDataProvided,
               ]),
         ),
       ),

@@ -7,16 +7,24 @@ class ExchangeRates {
 
 
   Map<String, String> currencyItems = {};
+  double fromValue = 0.00;
+  double toValue = 0.00;
 
 
-  Future<void> convertFromTo(String from, String to) async {
-    String url_str = "https://api.exchangerate.host/convert?from=$from&to=$to&amount=100";
+  Future<String> convertFromTo(String from, String to, String amount) async {
+    String url_str = "https://api.exchangerate.host/convert?from=$from&to=$to&amount=$amount";
     http.Response response = await http.get(Uri.parse(url_str));
 
     if(response.statusCode == 200){
-      var data = jsonDecode(response.body);
+      var data = jsonDecode(response.body)['result'];
+      if(data == null){
+        return '0.00';
+      }else {
+        return data.toString().substring(0, data.toString().indexOf('.')+3);
+      }
     } else {
       print(response.statusCode);
+      return '0.00';
     }
 
   }

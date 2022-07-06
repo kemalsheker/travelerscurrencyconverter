@@ -11,6 +11,12 @@ const Text kFromText = Text(
   textAlign: TextAlign.center,
 );
 
+const Text kDataProvided = Text(
+  'Data provided from Exchangerate.host',
+  style: TextStyle(fontSize: 12.0),
+  textAlign: TextAlign.center,
+);
+
 const Flexible kFromFlexible = Flexible(
   flex: 1,
   fit: FlexFit.loose,

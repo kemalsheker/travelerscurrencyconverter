@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'constants.dart';
 import 'exchangeMap.dart';
 import 'exchangeWidget.dart';
 
@@ -20,15 +21,15 @@ class ExchangeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Traveler's Currency Converter",
       home: Scaffold(
+        resizeToAvoidBottomInset : false,
         backgroundColor: Colors.white,
         body: SafeArea(
             child: Container(
               margin: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment : CrossAxisAlignment.stretch,
-                children:  <Widget>[
-                  const Flexible(flex: 3, fit: FlexFit.tight,child: exchangeWidget()),
-                  Flexible(flex: 2, fit: FlexFit.tight,child: Container()),
+                children:   <Widget>[
+                  Flexible(flex: 3, fit: FlexFit.tight,child: exchangeWidget()),
                   const Flexible(flex: 2, fit: FlexFit.tight,child: MapWidget()),
                 ],
               ),
