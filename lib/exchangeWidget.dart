@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
 import 'exchange_service.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 class exchangeWidget extends StatefulWidget {
-  exchangeWidget({Key? key, this.defaultFromValue = '100.00'}) : super(key: key);
-
-  final String defaultFromValue;
+  exchangeWidget({Key? key}) : super(key: key);
 
   @override
   _exchangeWidgetState createState() => _exchangeWidgetState();
@@ -16,18 +15,37 @@ class _exchangeWidgetState extends State<exchangeWidget> {
   ExchangeRates exchangeRates = ExchangeRates();
   Map<String, String> currencySymbols = {};
 
-  String fromCurrency = 'USD';
-  String toCurrency = 'EUR';
-  late String fromValue;
-  String toValue = '';
+  String fromCurrency = '';
+  String toCurrency = '';
+  String fromValue = '';
+  String toValue = '0.00';
   late var currencyControllerFrom;
   late TextEditingController _controllerTo;
 
+  Future<void> readySharedPreferences() async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    fromCurrency = sharedPreferences.getString("fromCurrency") ?? 'USD';
+    toCurrency = sharedPreferences.getString("toCurrency") ?? 'EUR';
+    setState(() {});
+  }
 
+  Future<void> saveDataFrom(String value) async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    fromCurrency = value;
+    sharedPreferences.setString("fromCurrency", fromCurrency);
+  }
+
+  Future<void> saveDataTo(String value) async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    toCurrency = value;
+    sharedPreferences.setString("toCurrency", toCurrency);
+  }
+
+  
   @override
   void initState() {
-    fromValue = widget.defaultFromValue;
-    currencyControllerFrom =  MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: '',  initialValue: double.parse(fromValue));
+    currencyControllerFrom =
+        MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: '');
     _controllerTo = TextEditingController(text: toValue);
     exchangeRates.getCurrencyList().then((mapCurrency) {
       setState(() {
@@ -35,14 +53,13 @@ class _exchangeWidgetState extends State<exchangeWidget> {
       });
     });
     super.initState();
+    readySharedPreferences();
   }
 
-
+  
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300.0,
-      height: 300.0,
       padding: const EdgeInsets.all(8.0),
       child: Card(
         shape: RoundedRectangleBorder(
@@ -60,8 +77,9 @@ class _exchangeWidgetState extends State<exchangeWidget> {
                 kFromFlexible,
                 Flexible(
                   flex: 2,
-                  fit: FlexFit.loose,
+                  fit: FlexFit.tight,
                   child: DropdownButton(
+                    isExpanded: true,
                     borderRadius: BorderRadius.circular(12.0),
                     elevation: kDropDownElevation,
                     iconSize: 24.0,
@@ -77,9 +95,11 @@ class _exchangeWidgetState extends State<exchangeWidget> {
                         .values
                         .toList(),
                     value: fromCurrency,
-                    onChanged: (String? newValue) async{
+                    onChanged: (String? newValue) async {
                       fromCurrency = newValue!;
-                      toValue =  await exchangeRates.convertFromTo(fromCurrency, toCurrency, fromValue);
+                      saveDataFrom(newValue);
+                      toValue = await exchangeRates.convertFromTo(
+                          fromCurrency, toCurrency, fromValue);
                       print(fromCurrency);
                       setState(() {
                         _controllerTo = TextEditingController(text: toValue);
@@ -95,24 +115,51 @@ class _exchangeWidgetState extends State<exchangeWidget> {
                       border: OutlineInputBorder(),
                     ),
                     controller: currencyControllerFrom,
-                    onChanged: (String? value) async{
-                        fromValue = value!;
-                        toValue =  await exchangeRates.convertFromTo(fromCurrency, toCurrency, fromValue);
-                        print(toValue);
-                        setState(() {
-                          _controllerTo = TextEditingController(text: toValue);
-                        });
+                    onChanged: (String? value) async {
+                      fromValue = value!;
+                      toValue = await exchangeRates.convertFromTo(
+                          fromCurrency, toCurrency, fromValue);
+                      print(toValue);
+                      setState(() {
+                        _controllerTo = TextEditingController(text: toValue);
+                      });
                     },
                   ),
                 ),
-                swapRow,
-                kFromFlexible,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Expanded(child: kColumnDivider),
+                    ElevatedButton(
+                      child: const Icon(Icons.swap_vert),
+                      onPressed: () async{
+                        String temp = fromCurrency;
+                        fromCurrency = toCurrency;
+                        toCurrency = temp;
+                        toValue = await exchangeRates.convertFromTo(
+                            fromCurrency, toCurrency, fromValue);
+                        setState(() {
+                          _controllerTo = TextEditingController(text: toValue);
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(18, 18),
+                        shape: const CircleBorder(),
+                      ),
+                    ),
+                    const Expanded(
+                      child: kColumnDivider,
+                    ),
+                  ],
+                ),
+                kToFlexible,
                 Flexible(
                   flex: 2,
                   fit: FlexFit.loose,
                   child: DropdownButton(
                     borderRadius: BorderRadius.circular(12.0),
                     elevation: kDropDownElevation,
+                    isExpanded: true,
                     iconSize: 24.0,
                     items: currencySymbols
                         .map((description, value) {
@@ -126,9 +173,11 @@ class _exchangeWidgetState extends State<exchangeWidget> {
                         .values
                         .toList(),
                     value: toCurrency,
-                    onChanged: (String? newValue) async{
+                    onChanged: (String? newValue) async {
                       toCurrency = newValue!;
-                      toValue =  await exchangeRates.convertFromTo(fromCurrency, toCurrency, fromValue);
+                      saveDataTo(newValue);
+                      toValue = await exchangeRates.convertFromTo(
+                          fromCurrency, toCurrency, fromValue);
                       print(toCurrency);
                       setState(() {
                         _controllerTo = TextEditingController(text: toValue);

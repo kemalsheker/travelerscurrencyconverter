@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 
 const double kCardElevation = 8.0;
 
-const int kDropDownElevation = 12;
+const int kDropDownElevation = 18;
 
 const Text kFromText = Text(
   'From',
+  style: TextStyle(fontWeight: FontWeight.bold),
+  textAlign: TextAlign.center,
+);
+
+const Text kToText = Text(
+  'To',
   style: TextStyle(fontWeight: FontWeight.bold),
   textAlign: TextAlign.center,
 );
@@ -23,6 +29,12 @@ const Flexible kFromFlexible = Flexible(
   child: Padding(padding: EdgeInsets.all(4.0), child: kFromText),
 );
 
+const Flexible kToFlexible = Flexible(
+  flex: 1,
+  fit: FlexFit.loose,
+  child: Padding(padding: EdgeInsets.all(4.0), child: kToText),
+);
+
 const SizedBox kSizedBoxHorizontal = SizedBox(
   width: 8.0,
 );
@@ -34,22 +46,4 @@ const Divider kColumnDivider = Divider(
   endIndent: 8.0,
 );
 
-final Row swapRow =  Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: <Widget>[
-    const Expanded(
-        child: kColumnDivider
-    ),
-    ElevatedButton(
-      child: const Icon(Icons.swap_vert),
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        fixedSize: const Size(18, 18),
-        shape: const CircleBorder(),
-      ),
-    ),
-    const Expanded(
-        child: kColumnDivider,
-    ),
-  ],
-);
+
