@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'exchangeMap.dart';
 import 'exchangeWidget.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIOverlays(
+      [SystemUiOverlay.bottom, SystemUiOverlay.top]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const ExchangeApp());
 }
 

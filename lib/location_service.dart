@@ -14,7 +14,6 @@ class Location {
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
       List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
       Placemark placeMark  = placemarks[0];
-      print(placemarks[0].toString());
       _locationName = placeMark.subAdministrativeArea! + ", " + placeMark.isoCountryCode!;
       return _locationName;
     }catch(e){

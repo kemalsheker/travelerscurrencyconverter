@@ -17,7 +17,7 @@ class _exchangeWidgetState extends State<exchangeWidget> {
 
   String fromCurrency = '';
   String toCurrency = '';
-  String fromValue = '';
+  String fromValue = '0.00';
   String toValue = '0.00';
   late var currencyControllerFrom;
   late TextEditingController _controllerTo;
@@ -100,7 +100,6 @@ class _exchangeWidgetState extends State<exchangeWidget> {
                       saveDataFrom(newValue);
                       toValue = await exchangeRates.convertFromTo(
                           fromCurrency, toCurrency, fromValue);
-                      print(fromCurrency);
                       setState(() {
                         _controllerTo = TextEditingController(text: toValue);
                       });
@@ -119,7 +118,6 @@ class _exchangeWidgetState extends State<exchangeWidget> {
                       fromValue = value!;
                       toValue = await exchangeRates.convertFromTo(
                           fromCurrency, toCurrency, fromValue);
-                      print(toValue);
                       setState(() {
                         _controllerTo = TextEditingController(text: toValue);
                       });
@@ -178,7 +176,6 @@ class _exchangeWidgetState extends State<exchangeWidget> {
                       saveDataTo(newValue);
                       toValue = await exchangeRates.convertFromTo(
                           fromCurrency, toCurrency, fromValue);
-                      print(toCurrency);
                       setState(() {
                         _controllerTo = TextEditingController(text: toValue);
                       });

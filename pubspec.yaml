@@ -37,6 +37,7 @@ dependencies:
   url_launcher: ^6.1.4
   flutter_masked_text2: ^0.9.1
   shared_preferences: ^2.0.15
+  flutter_native_splash: ^1.2.0
 
 
 dev_dependencies:
@@ -64,6 +65,13 @@ flutter:
 
   assets:
    - images/
+
+flutter_native_splash:
+  color: "#7F7FFF"
+  image: images/exchange-rate.png
+  android: true
+  android_gravity: center
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
